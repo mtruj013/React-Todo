@@ -1,5 +1,6 @@
 import React from 'react';
 import TodoList from "./components/TodoList";
+import TodoForm from "./components/TodoForm"
 
 //
 const todos = [
@@ -33,7 +34,19 @@ class App extends React.Component {
   // this component is going to take care of state, and any change handlers you need to work with your state
   constructor() {
     super();
-    this.state = { todoList: todos };//this will be set to todo list items 
+    this.state = { todoList : todos };//this will be set to todo list items 
+  }
+
+  addTodo = (event, todo) => {
+    event.preventDefault();
+    const newTodo = {
+      task: todo,
+      id: Date.now(),
+      completed: false
+    };
+    this.setState({
+      todoList:[...this.state.todoList, newTodo]
+    })
   }
 
   //class meathods to update state 
@@ -52,13 +65,23 @@ class App extends React.Component {
     })
   }
 
+  clearCompleted = event => {
+    event.preventDefault();
+
+    this.setState({
+      todoList: this.state.todoList.filter(todo => !todo.completed)
+    });
+  };
+
   render() {
     return (
       <div>
         <h2>Welcome to your Todo App!</h2>
+        <TodoForm addTodo={this.addTodo}/>
         <TodoList
           todos={this.state.todoList}
           toggleTodo={this.toggleTodo}
+          clearCompleted={this.clearCompleted}
         />
 
       </div>
